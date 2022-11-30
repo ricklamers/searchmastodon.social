@@ -13,7 +13,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
-      - run: cd fetching && npm run start
+      - run: cd fetching && npm i && npm run start
 
       - name: Commit & Push
         uses: Andro999b/push@v1.3
