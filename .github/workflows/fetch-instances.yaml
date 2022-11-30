@@ -13,7 +13,9 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
-      - run: cd fetching && npm i && npm run start
+      - run: cd fetching && npm ci && npm run start
+        env:
+          INSTANCES_SOCIAL_SECRET: ${{ secrets.INSTANCES_SOCIAL_SECRET }}
 
       - name: Commit & Push
         uses: Andro999b/push@v1.3
