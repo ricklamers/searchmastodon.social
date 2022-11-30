@@ -1,4 +1,4 @@
-name: Overwrite some file
+name: Fetch instances
 
 on:
   workflow_dispatch:
