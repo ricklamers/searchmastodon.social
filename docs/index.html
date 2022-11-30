@@ -9,16 +9,24 @@
   <style>
     * {
       box-sizing: border-box;
+      padding:0;
+      margin: 0;
     }
+
     html, body {
       height: 100%;
       font-family: sans-serif;
     }
+
     body {
       display: flex;
       align-items: center;
       justify-content: center;
       flex-direction: column;
+    }
+
+    p {
+      margin: 10px 0;
     }
 
     .search-box {
@@ -35,6 +43,7 @@
 
     .search-box-holder button {
       margin-top: 10px;
+      padding: 5px 8px;
     }
 
     .search-box input {
@@ -57,6 +66,16 @@
       left: 10px;
       top: 10px;
     }
+    
+    .source {
+      position: absolute;
+      bottom: 10px;
+      font-size: 0.9em;
+      color: #999;
+    }
+    .source a {
+      color: #999;
+    }
   </style>
 </head>
 <body>
@@ -70,6 +89,10 @@
       </div>
       <button type="submit">Search</button>
     </form>
+  </div>
+
+  <div class="source">
+    Check the source <a href="https://github.com/ricklamers/searchmastodon.social">on GitHub</a>
   </div>
 
   
