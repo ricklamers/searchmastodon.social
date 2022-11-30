@@ -1,0 +1,14 @@
+{
+  "name": "fetching",
+  "version": "1.0.0",
+  "description": "",
+  "main": "fetch-instances.js",
+  "scripts": {
+    "start": "node fetch-instances.js"
+  },
+  "author": "R. Lamers",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "node-fetch": "^2.6.7"
+  }
+}

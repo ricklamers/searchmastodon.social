@@ -2,9 +2,131 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/x-icon" href="mastodon.png">
+
+  <title>Search Mastodon</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    html, body {
+      height: 100%;
+      font-family: sans-serif;
+    }
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+
+    .search-box {
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid grey;
+      position: relative;
+    }
+    .search-box-holder {
+      width: 80%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    .search-box-holder button {
+      margin-top: 10px;
+    }
+
+    .search-box input {
+      border: 0;
+      padding: 10px;
+      padding-left: 40px;
+      width: 100%;
+    }
+
+    .search-box input:focus {
+      background: #eee;
+    }
+
+    .search-box input:focus {
+      outline: none;
+    }
+
+    .search-box img {
+      position: absolute;
+      left: 10px;
+      top: 10px;
+    }
+  </style>
 </head>
 <body>
-  Test
+  <img src="mastodon.svg" alt="Mastodon logo" width="125px" />
+  <p><i>Search all of Mastodon</i></p>
+  <div class="search-box-holder">
+    <form id="searchform">
+      <div class="search-box">
+        <img src="search.svg" alt="Magnifying glass" width="15px" />
+        <input id="searchfield" type="text" value="" />
+      </div>
+      <button type="submit">Search</button>
+    </form>
+  </div>
+
+  
+  <script>
+    let instances = undefined;
+    let googleBaseUrl = "https://www.google.com/search?q=";
+
+    fetch("instances.json")
+    .then(function(response) {
+      return response.json();
+    })
+    .then(function(jsonResponse) {
+      // do something with jsonResponse
+      instances = jsonResponse.instances;
+      instances.sort(function(a, b){ return parseInt(b.users) - parseInt(a.users) })
+
+      instances = instances.filter(function(instance){ 
+        if(instance.info == null){return false}
+        return instance.info.languages.indexOf("en") >= 0 
+      });
+      console.log("Number of en servers: " + instances.length);
+    });
+
+    function submitform(e){
+      e.preventDefault();
+      search();
+    }
+
+    let form = document.querySelector("#searchform");
+    form.addEventListener("submit", submitform);
+
+    function search(){
+      // create query
+      let query = form.querySelector("input").value;
+      let constructedQuery = query;
+      
+      let count = instances.length;
+
+      // Shrink up to 100 times or fail
+      for(let x = 0; x < 100; x++){
+        instances.slice(0, count).forEach((e) => {
+          constructedQuery += " site:" + e.name + " | "
+        });
+        // Google seems to break for queries over 15k chars
+        if(constructedQuery.length < 1000){
+          break;
+        }
+        constructedQuery = query;
+        count = Math.round(count * 0.9);
+        console.log("Failed, trying again with count " + count)
+      }
+      
+      // console.log(instances);
+      window.location.href = googleBaseUrl + constructedQuery;
+    }
+
+
+  </script>
 </body>
 </html>
