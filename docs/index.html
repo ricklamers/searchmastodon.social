@@ -82,7 +82,7 @@
   <img src="mastodon.svg" alt="Mastodon logo" width="125px" />
   <p><i>Search across popular Mastodon instances</i></p>
   <div class="search-box-holder">
-    <form id="searchform">
+    <form id="searchform" action="search.html">
       <div class="search-box">
         <img src="search.svg" alt="Magnifying glass" width="15px" />
         <input id="searchfield" type="text" value="" />
@@ -95,61 +95,19 @@
     Check the source <a href="https://github.com/ricklamers/searchmastodon.social">on GitHub</a>
   </div>
 
-  
   <script>
-    let instances = undefined;
-    let googleBaseUrl = "https://www.google.com/search?q=";
+    let form = document.querySelector("form#searchform");
+    
+    form.addEventListener("submit", function(e){
+      e.preventDefault();
+      
+      let query = form.querySelector("input").value;
+      
+      window.location.href = "search.html#gsc.tab=0&gsc.sort=&gsc.q="+query+"&gsc.page=1";
 
-    fetch("instances.json")
-    .then(function(response) {
-      return response.json();
-    })
-    .then(function(jsonResponse) {
-      // do something with jsonResponse
-      instances = jsonResponse.instances;
-      instances.sort(function(a, b){ return parseInt(b.users) - parseInt(a.users) })
-
-      instances = instances.filter(function(instance){ 
-        if(instance.info == null){return false}
-        return instance.info.languages.indexOf("en") >= 0 
-      });
-      console.log("Number of en servers: " + instances.length);
     });
 
-    function submitform(e){
-      e.preventDefault();
-      search();
-    }
-
-    let form = document.querySelector("#searchform");
-    form.addEventListener("submit", submitform);
-
-    function search(){
-      // create query
-      let query = form.querySelector("input").value;
-      let constructedQuery = query;
-      
-      let count = instances.length;
-
-      // Shrink up to 100 times or fail
-      for(let x = 0; x < 100; x++){
-        instances.slice(0, count).forEach((e) => {
-          constructedQuery += " site:" + e.name + " | "
-        });
-        // Google seems to break for queries over 15k chars
-        if(constructedQuery.length < 1000){
-          break;
-        }
-        constructedQuery = query;
-        count = Math.round(count * 0.9);
-        console.log("Failed, trying again with count " + count)
-      }
-      
-      // console.log(instances);
-      window.location.href = googleBaseUrl + constructedQuery;
-    }
-
-
   </script>
+  
 </body>
 </html>
